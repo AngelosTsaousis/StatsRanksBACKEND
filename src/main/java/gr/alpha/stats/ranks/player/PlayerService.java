@@ -1,4 +1,5 @@
 package gr.alpha.stats.ranks.player;
+import gr.alpha.stats.ranks.DTOObjects.TopPlayerDTO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,4 +27,21 @@ public class PlayerService {
     public Iterable<Player> getTeamPlayers(Integer teamId) {
         return playerRepository.findByTeamId(teamId);
     }
+
+    /**
+     * Fetches top 3 scores for a specific Group ID.
+     * @param groupId
+     */
+    public Iterable<TopPlayerDTO> getTop3Scores(Integer groupId) {
+        return playerRepository.findTop3ScorersByGroupId(groupId);
+    }
+
+    /**
+     * Fetches top 3 three-pointers for a specific Group ID.
+     * @param groupId
+     */
+    public Iterable<TopPlayerDTO> getTop3ThreePointers(Integer groupId) {
+        return playerRepository.findTop3ThreePointersByGroupId(groupId);
+    }
+
 }

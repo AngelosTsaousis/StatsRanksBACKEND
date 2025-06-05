@@ -1,5 +1,6 @@
 package gr.alpha.stats.ranks.game;
 
+import gr.alpha.stats.ranks.DTOObjects.TeamStandingDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +35,7 @@ class GameController {
     }
 
     /**
-     * Retrieves a specific games by their group ID.
+     * Retrieves all games for a group ID.
      *
      * @param id the ID of the game to retrieve
      * @return the game with the specified ID
@@ -53,6 +54,17 @@ class GameController {
     @GetMapping("/group/{groupId}/dates")
     public List<LocalDate> getGameDatesByGroupId(@PathVariable Integer groupId) {
         return gameService.getGameDatesByGroupId(groupId);
+    }
+
+    /**
+     * Retrieves team standings for a specific group.
+     *
+     * @param groupId the ID of the group to find team standings for
+     * @return an iterable of team standings for the specified group
+     */
+    @GetMapping("/group/{groupId}/standings")
+    public Iterable<TeamStandingDTO> getTeamStandingsByGroupId(@PathVariable Integer groupId) {
+        return gameService.getTeamStandingsByGroupId(groupId);
     }
 
 }

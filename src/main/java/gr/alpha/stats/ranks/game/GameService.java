@@ -1,5 +1,6 @@
 package gr.alpha.stats.ranks.game;
 
+import gr.alpha.stats.ranks.DTOObjects.TeamStandingDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -54,5 +55,15 @@ class GameService {
                 .collect(Collectors.toList());
 
         return distinctDates;
+    }
+
+    /**
+     * Retrieves team standings for a specific group.
+     *
+     * @param groupId the ID of the group to find team standings for
+     * @return an iterable of team standings
+     */
+    public Iterable<TeamStandingDTO> getTeamStandingsByGroupId(Integer groupId) {
+        return gameRepository.findTeamStandingsByGroupId(groupId);
     }
 }
