@@ -66,7 +66,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
     GROUP BY 
         t.id, t.name
     ORDER BY 
-        pointsConceded ASC
+        totalPoints ASC
     LIMIT 3
     """, nativeQuery = true)
     List<TopTeamsDTO> findTop3DefensiveTeamsByGroupId(Integer groupId);

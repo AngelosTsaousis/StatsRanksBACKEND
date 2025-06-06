@@ -50,7 +50,6 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
         SELECT 
             p.first_name AS firstName,
             p.last_name AS lastName,
-            p.
             SUM(ps.three_pointers) AS total
         FROM 
             player_stats ps
