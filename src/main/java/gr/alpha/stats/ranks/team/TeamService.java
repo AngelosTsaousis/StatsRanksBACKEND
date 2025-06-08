@@ -47,4 +47,21 @@ public class TeamService {
         return teamRepository.findTop3DefensiveTeamsByGroupId(groupId);
     }
 
+    /**
+     * Get top 3 scoring teams for a specific league.
+     * @param leagueId
+     * @return
+     */
+    public List<TopTeamsDTO> getTop3ScoringTeamsByLeagueId(Integer leagueId) {
+        return teamRepository.findTop3ScoringLeagueTeams(leagueId);
+    }
+
+    /**
+     * Get top 3 defensive teams for a specific league.
+     * @param leagueId
+     * @return
+     */
+    public List<TopTeamsDTO> getTop3DefensiveTeamsByLeagueId(Integer leagueId) {
+        return teamRepository.findTop3DefenciveLeagueTeams(leagueId);
+    }
 }

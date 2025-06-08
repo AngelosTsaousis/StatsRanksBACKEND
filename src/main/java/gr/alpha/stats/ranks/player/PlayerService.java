@@ -44,4 +44,22 @@ public class PlayerService {
         return playerRepository.findTop3ThreePointersByGroupId(groupId);
     }
 
+    /**
+     * Fetches top 3 scorers per league.
+     * @param leagueId
+     * @return
+     */
+    public Iterable<TopPlayerDTO> getTop3ScorersByLeague(Integer leagueId) {
+        return playerRepository.findTop3ScorersByLeague(leagueId);
+    }
+
+    /**
+     * Fetches top 3 three-pointers per league.
+     * @param leagueId
+     * @return
+     */
+    public Iterable<TopPlayerDTO> getTop3ThreePointersByLeague(Integer leagueId) {
+        return playerRepository.findTop3ThreePointersByLeague(leagueId);
+    }
+
 }

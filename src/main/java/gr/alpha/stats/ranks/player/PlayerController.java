@@ -39,7 +39,7 @@ class PlayerController {
      * @param groupId
      * @return
      */
-    @RequestMapping("/top-scores/{groupId}")
+    @RequestMapping("/top-scorers/{groupId}")
     public Iterable<TopPlayerDTO> getTop3Scores(@PathVariable Integer groupId) {
         return playerService.getTop3Scores(groupId);
     }
@@ -52,6 +52,26 @@ class PlayerController {
     @RequestMapping("/top-three-pointers/{groupId}")
     public Iterable<TopPlayerDTO> getTop3ThreePointers(@PathVariable Integer groupId) {
         return playerService.getTop3ThreePointers(groupId);
+    }
+
+    /**
+     * Fetches top 3 scorers per league.
+     * @param leagueId
+     * @return
+     */
+    @RequestMapping("/top-scorers/league/{leagueId}")
+    public Iterable<TopPlayerDTO> getTop3ScorersByLeague(@PathVariable Integer leagueId) {
+        return playerService.getTop3ScorersByLeague(leagueId);
+    }
+
+    /**
+     * Fetches top 3 three-pointers per league.
+     * @param leagueId
+     * @return
+     */
+    @RequestMapping("/top-three-pointers/league/{leagueId}")
+    public Iterable<TopPlayerDTO> getTop3ThreePointersByLeague(@PathVariable Integer leagueId) {
+        return playerService.getTop3ThreePointersByLeague(leagueId);
     }
 
 }

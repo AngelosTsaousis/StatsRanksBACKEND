@@ -65,5 +65,28 @@ class TeamController {
     public List<TopTeamsDTO> getTop3DefensiveTeamsByGroupId(@PathVariable Integer groupId) {
         return teamService.getTop3DefensiveTeamsByGroupId(groupId);
     }
+
+    /**
+     * Get top 3 scoring teams for a specific league.
+     *
+     * @param leagueId the ID of the league to find top teams for
+     * @return a list of TopTeamsDTO containing the top 3 scoring teams' names and their total points
+     */
+    @GetMapping("/league/{leagueId}/top3Offensive")
+    public List<TopTeamsDTO> getTop3ScoringTeamsByLeagueId(@PathVariable Integer leagueId) {
+        return teamService.getTop3ScoringTeamsByLeagueId(leagueId);
+    }
+
+    /**
+     * Get top 3 defensive teams for a specific league.
+     *
+     * @param leagueId the ID of the league to find top defensive teams for
+     * @return a list of TopTeamsDTO containing the top 3 defensive teams' names and their total points conceded
+     */
+    @GetMapping("/league/{leagueId}/top3Defensive")
+    public List<TopTeamsDTO> getTop3DefensiveTeamsByLeagueId(@PathVariable Integer leagueId) {
+        return teamService.getTop3DefensiveTeamsByLeagueId(leagueId);
+    }
+
 }
 

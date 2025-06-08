@@ -67,4 +67,58 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
         """, nativeQuery = true)
     Iterable<TopPlayerDTO> findTop3ThreePointersByGroupId(Integer groupId);
 
+    /**
+     * Finds the top 3 scorers in a specific league based on their total points.
+     *
+     * @param leagueId the ID of the league to find top scorers for
+     * @return an iterable of TopPlayerDTO containing the top 3 players' names and their total points
+     */
+    @Query(value = """
+        SELECT 
+            p.first_name AS firstName,
+            p.last_name AS lastName,
+            SUM(ps.points) AS total
+        FROM 
+            player_stats ps
+        JOIN 
+            players p ON ps.player_id = p.id
+        JOIN 
+            teams t ON p.team_id = t.id
+        WHERE 
+            CAST(t.group_id AS CHAR) LIKE CONCAT('%', :leagueId)
+        GROUP BY 
+            p.id
+        ORDER BY 
+            total DESC
+        LIMIT 3
+        """, nativeQuery = true)
+    Iterable<TopPlayerDTO> findTop3ScorersByLeague(Integer leagueId);
+
+    /**
+     * Finds the top 3 players with the most three-pointers in a specific league.
+     *
+     * @param leagueId the ID of the league to find top three-point shooters for
+     * @return an iterable of TopPlayerDTO containing the top 3 players' names and their total three-pointers
+     */
+    @Query(value = """
+        SELECT 
+            p.first_name AS firstName,
+            p.last_name AS lastName,
+            SUM(ps.three_pointers) AS total
+        FROM 
+            player_stats ps
+        JOIN 
+            players p ON ps.player_id = p.id
+        JOIN 
+            teams t ON p.team_id = t.id
+        WHERE 
+            CAST(t.group_id AS CHAR) LIKE CONCAT('%', :leagueId)
+        GROUP BY 
+            p.id
+        ORDER BY 
+            total DESC
+        LIMIT 3
+        """, nativeQuery = true)
+    Iterable<TopPlayerDTO> findTop3ThreePointersByLeague(Integer leagueId);
+
 }
