@@ -5,8 +5,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TeamRepository extends JpaRepository<Team, Integer> {
+
+    /**
+     * Find team by team id.
+     *
+     * @param id
+     * @return
+     */
+    Optional<Team> findById(Integer id);
+
     /**
      * Finds teams by their group ID.
      *

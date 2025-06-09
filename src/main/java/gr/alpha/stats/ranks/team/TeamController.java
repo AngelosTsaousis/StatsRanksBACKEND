@@ -1,12 +1,16 @@
 package gr.alpha.stats.ranks.team;
 
 import gr.alpha.stats.ranks.DTOObjects.TopTeamsDTO;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/teams")
@@ -86,6 +90,23 @@ class TeamController {
     @GetMapping("/league/{leagueId}/top3Defensive")
     public List<TopTeamsDTO> getTop3DefensiveTeamsByLeagueId(@PathVariable Integer leagueId) {
         return teamService.getTop3DefensiveTeamsByLeagueId(leagueId);
+    }
+
+    /**
+     * Generates scouting report as PDF file.
+     * @param id
+     * @return
+     */
+    @GetMapping("/generate/{id}")
+    public ResponseEntity<byte[]> generatePdf(@PathVariable Integer id) {
+        Team team = teamService.findById(id).orElse(null);
+        byte[] pdfBytes = teamService.generatePdf("Scouting Report", team);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("filename", "document.pdf");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdfBytes);
     }
 
 }
