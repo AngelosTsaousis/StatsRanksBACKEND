@@ -1,9 +1,8 @@
 package gr.alpha.stats.ranks.team;
 
+import gr.alpha.stats.ranks.DTOObjects.PlayerAveragesDTO;
+import gr.alpha.stats.ranks.DTOObjects.TeamGameLogDTO;
 import gr.alpha.stats.ranks.DTOObjects.TopTeamsDTO;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +24,18 @@ class TeamController {
      */
     public TeamController(TeamService teamService) {
         this.teamService = teamService;
+    }
+
+    /**
+     * Fetches a team by its ID.
+     *
+     * @param teamId the ID of the team to find
+     * @return the team with the specified ID
+     */
+    @GetMapping("/{teamId}")
+    public Team getTeamById(@PathVariable Integer teamId) {
+        Optional<Team> team = teamService.findById(teamId);
+        return team.orElseThrow(() -> new RuntimeException("Team not found with id: " + teamId));
     }
 
     /**
@@ -93,20 +104,45 @@ class TeamController {
     }
 
     /**
-     * Generates scouting report as PDF file.
-     * @param id
+     * Get the average points scored by a team based on its ID.
+     *
+     * @param teamId the ID of the team to calculate average points for
+     * @return the average points scored by the team
+     */
+    @GetMapping("/averagePoints/{teamId}")
+    public Double getAveragePointsByTeamId(@PathVariable Integer teamId) {
+        return teamService.getAveragePointsByTeamId(teamId);
+    }
+
+    /**
+     * Get the average three-pointers made by a team based on its ID.
+     *
+     * @param teamId the ID of the team to find the average three-pointers for
+     * @return the average three-pointers made by the team
+     */
+    @GetMapping("/averageThreePointers/{teamId}")
+    public Double getAverageThreePointersByTeamId(@PathVariable Integer teamId) {
+        return teamService.getAverageThreePointersByTeamId(teamId);
+    }
+
+    /**
+     * Gets game logs for a team based on its ID, including opponent name, total points, and total three-pointers.
+     * @param teamId
      * @return
      */
-    @GetMapping("/generate/{id}")
-    public ResponseEntity<byte[]> generatePdf(@PathVariable Integer id) {
-        Team team = teamService.findById(id).orElse(null);
-        byte[] pdfBytes = teamService.generatePdf("Scouting Report", team);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("filename", "document.pdf");
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(pdfBytes);
+    @GetMapping("/gameLogs/{teamId}")
+    public List<TeamGameLogDTO> getTeamGameLogs(@PathVariable Integer teamId) {
+        return teamService.getTeamGameLogsByTeamId(teamId);
+    }
+
+    /**
+     * Get player averages (points per game and three-pointers per game) for a specific team.
+     * @param teamId
+     * @return
+     */
+    @GetMapping("/playerAverages/{teamId}")
+    public List<PlayerAveragesDTO> getPlayerAveragesByTeamId(@PathVariable Integer teamId) {
+        return teamService.getPlayerAveragesByTeamId(teamId);
     }
 
 }

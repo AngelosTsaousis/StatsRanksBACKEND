@@ -3,8 +3,13 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import gr.alpha.stats.ranks.DTOObjects.PlayerAveragesDTO;
+import gr.alpha.stats.ranks.DTOObjects.TeamGameLogDTO;
 import gr.alpha.stats.ranks.DTOObjects.TopTeamsDTO;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -13,9 +18,11 @@ import java.util.Optional;
 @Service
 public class TeamService {
     private final TeamRepository teamRepository;
+    private final SpringTemplateEngine templateEngine;
 
-    public TeamService(TeamRepository teamRepository) {
+    public TeamService(TeamRepository teamRepository,SpringTemplateEngine templateEngine) {
         this.teamRepository = teamRepository;
+        this.templateEngine = templateEngine;
     }
 
     /**
@@ -81,58 +88,40 @@ public class TeamService {
         return teamRepository.findTop3DefenciveLeagueTeams(leagueId);
     }
 
-    public byte[] generatePdf(String title, Team team) {
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Document document = new Document();
-            PdfWriter.getInstance(document, out);
-            document.open();
+    /**
+     * Get the average points scored by a team based on its ID.
+     * @param teamId
+     * @return
+     */
+    public Double getAveragePointsByTeamId(Integer teamId) {
+        return teamRepository.findTeamsAveragePointsByTeamId(teamId);
+    }
 
-            // Add title
-            Font titleFont = new Font(Font.HELVETICA, 18, Font.BOLD);
-            Paragraph titleParagraph = new Paragraph(title, titleFont);
-            titleParagraph.setAlignment(Element.ALIGN_CENTER);
-            document.add(titleParagraph);
-            document.add(Chunk.NEWLINE);
+    /**
+     * Finds the average three-pointers made by a team based on its ID.
+     *
+     * @param teamId the ID of the team to find the average three-pointers for
+     * @return the average three-pointers made by the team
+     */
+    public Double getAverageThreePointersByTeamId(Integer teamId) {
+        return teamRepository.findAverageThreePointersByTeamId(teamId);
+    }
 
-            String photoUrl = team.getPhotoUrl();
-            String teamName = team.getName();
-            if (photoUrl != null && !photoUrl.isEmpty()) {
-                try {
-                    Image img = Image.getInstance(photoUrl);
-                    img.scaleToFit(200 , 200);
-                    img.setAlignment(Element.ALIGN_LEFT);
+    /**
+     * Gets game logs for a team based on its ID, including opponent name, total points, and total three-pointers.
+     * @param teamId
+     * @return
+     */
+    public List<TeamGameLogDTO> getTeamGameLogsByTeamId(Integer teamId) {
+        return teamRepository.findGameLogsByTeamId(teamId);
+    }
 
-                    // Create a table with two columns: photo and team name
-                    PdfPTable table = new PdfPTable(2);
-                    table.setWidthPercentage(100);
-                    table.setWidths(new int[]{1, 3});
-
-                    PdfPCell imageCell = new PdfPCell(img, true);
-                    imageCell.setBorder(Rectangle.NO_BORDER);
-                    imageCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-                    Font nameFont = new Font(Font.HELVETICA, 22, Font.BOLD);
-                    Phrase namePhrase = new Phrase("TEST ONOMA", nameFont);
-                    PdfPCell nameCell = new PdfPCell(namePhrase);
-                    nameCell.setBorder(Rectangle.NO_BORDER);
-                    nameCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    nameCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-
-                    table.addCell(imageCell);
-                    table.addCell(nameCell);
-
-                    document.add(table);
-                    document.add(Chunk.NEWLINE);
-                } catch (Exception ex) {
-                    // Optionally log or handle image loading errors
-                }
-            }
-
-
-            document.close();
-            return out.toByteArray();
-        } catch (Exception e) {
-            throw new RuntimeException("Error generating PDF", e);
-        }
+    /**
+     * Get player averages (points per game and three-pointers per game) for a specific team.
+     * @param teamId
+     * @return
+     */
+    public List<PlayerAveragesDTO> getPlayerAveragesByTeamId(Integer teamId) {
+        return teamRepository.findPlayerAveragesByTeamId(teamId);
     }
 }
