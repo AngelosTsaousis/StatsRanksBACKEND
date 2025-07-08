@@ -1,28 +1,17 @@
 package gr.alpha.stats.ranks.team;
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
 import gr.alpha.stats.ranks.DTOObjects.PlayerAveragesDTO;
 import gr.alpha.stats.ranks.DTOObjects.TeamGameLogDTO;
 import gr.alpha.stats.ranks.DTOObjects.TopTeamsDTO;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring6.SpringTemplateEngine;
-import org.xhtmlrenderer.pdf.ITextRenderer;
-
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TeamService {
     private final TeamRepository teamRepository;
-    private final SpringTemplateEngine templateEngine;
 
-    public TeamService(TeamRepository teamRepository,SpringTemplateEngine templateEngine) {
+    public TeamService(TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
-        this.templateEngine = templateEngine;
     }
 
     /**
