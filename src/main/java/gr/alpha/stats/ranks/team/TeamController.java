@@ -43,7 +43,7 @@ class TeamController {
      *
      * @return
      */
-    @GetMapping
+    @GetMapping("/all")
     public List<Team> getAllTeams() {
         return teamService.getAllTeams();
     }

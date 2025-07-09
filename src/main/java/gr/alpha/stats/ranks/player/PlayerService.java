@@ -1,15 +1,28 @@
 package gr.alpha.stats.ranks.player;
 import gr.alpha.stats.ranks.DTOObjects.PlayerGameLogDTO;
 import gr.alpha.stats.ranks.DTOObjects.TopPlayerDTO;
+import gr.alpha.stats.ranks.team.TeamRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PlayerService {
 
     private  final PlayerRepository playerRepository;
+    private final TeamRepository teamRepository;
 
-    public PlayerService(PlayerRepository playerRepository) {
+    public PlayerService(PlayerRepository playerRepository, TeamRepository teamRepository) {
         this.playerRepository = playerRepository;
+        this.teamRepository = teamRepository;
+    }
+
+    /**
+     * Finds all players in the database.
+     *
+     * @return an iterable of all players
+     */
+    public Iterable<Player> findAllPlayers() {
+        return playerRepository.findAll();
     }
 
     /**
@@ -99,5 +112,17 @@ public class PlayerService {
      */
     public Iterable<PlayerGameLogDTO> getPlayerGameLogs(Integer playerId) {
         return playerRepository.findAllGamesForPlayer(playerId);
+    }
+
+    /**
+     * Saves a players data  to the database for the given player id.
+     */
+    @Transactional
+    public Player saveOrUpdatePlayer(Player player) {
+        if (player.getTeam() != null) {
+            teamRepository.findById(player.getTeam().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+        }
+        return playerRepository.save(player);
     }
 }

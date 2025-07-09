@@ -2,9 +2,9 @@ package gr.alpha.stats.ranks.player;
 
 import gr.alpha.stats.ranks.DTOObjects.PlayerGameLogDTO;
 import gr.alpha.stats.ranks.DTOObjects.TopPlayerDTO;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/players")
@@ -116,5 +116,19 @@ class PlayerController {
     @RequestMapping("/game-logs/{playerId}")
     public Iterable<PlayerGameLogDTO> getPlayerGameLogs(@PathVariable Integer playerId) {
         return playerService.getPlayerGameLogs(playerId);
+    }
+
+    @PostMapping
+    public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
+        Player saved = playerService.saveOrUpdatePlayer(player);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+
+    @PutMapping("/save/{playerId}")
+    public ResponseEntity<Player> updatePlayer(@PathVariable Integer playerId, @RequestBody Player player) {
+        player.setId(playerId); // Make sure ID matches URL
+        Player updated = playerService.saveOrUpdatePlayer(player);
+        return ResponseEntity.ok(updated);
     }
 }
