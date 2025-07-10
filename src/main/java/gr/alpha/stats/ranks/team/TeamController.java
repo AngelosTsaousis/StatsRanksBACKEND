@@ -3,10 +3,8 @@ package gr.alpha.stats.ranks.team;
 import gr.alpha.stats.ranks.DTOObjects.PlayerAveragesDTO;
 import gr.alpha.stats.ranks.DTOObjects.TeamGameLogDTO;
 import gr.alpha.stats.ranks.DTOObjects.TopTeamsDTO;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -145,5 +143,17 @@ class TeamController {
         return teamService.getPlayerAveragesByTeamId(teamId);
     }
 
+    @PostMapping
+    public ResponseEntity<Team> createTeam(@RequestBody Team team) {
+        Team created = teamService.saveOrUpdateTeam(team);
+        return ResponseEntity.ok(created);
+    }
+
+    @PutMapping("/{teamId}")
+    public ResponseEntity<Team> updateTeam(@PathVariable Integer teamId, @RequestBody Team team) {
+        team.setId(teamId); // Ensure the ID matches the URL
+        Team updated = teamService.saveOrUpdateTeam(team);
+        return ResponseEntity.ok(updated);
+    }
 }
 

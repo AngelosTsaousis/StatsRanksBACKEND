@@ -118,14 +118,24 @@ class PlayerController {
         return playerService.getPlayerGameLogs(playerId);
     }
 
+    /**
+     * Creates a new player.
+     * @param player
+     * @return
+     */
     @PostMapping
     public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
         Player saved = playerService.saveOrUpdatePlayer(player);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
-
-    @PutMapping("/save/{playerId}")
+    /**
+     * Updates an existing player.
+     * @param playerId
+     * @param player
+     * @return
+     */
+    @PutMapping("/{playerId}")
     public ResponseEntity<Player> updatePlayer(@PathVariable Integer playerId, @RequestBody Player player) {
         player.setId(playerId); // Make sure ID matches URL
         Player updated = playerService.saveOrUpdatePlayer(player);

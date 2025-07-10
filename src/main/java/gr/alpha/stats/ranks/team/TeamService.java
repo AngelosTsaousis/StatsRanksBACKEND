@@ -113,4 +113,13 @@ public class TeamService {
     public List<PlayerAveragesDTO> getPlayerAveragesByTeamId(Integer teamId) {
         return teamRepository.findPlayerAveragesByTeamId(teamId);
     }
+
+    /**
+     * Saves or updates a team in the database.
+     * @param team
+     * @return
+     */
+    public Team saveOrUpdateTeam(Team team) {
+        return teamRepository.save(team);
+    }
 }

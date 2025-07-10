@@ -1,11 +1,9 @@
 package gr.alpha.stats.ranks.game;
 
 import gr.alpha.stats.ranks.DTOObjects.TeamStandingDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -67,4 +65,28 @@ class GameController {
         return gameService.getTeamStandingsByGroupId(groupId);
     }
 
+    /**
+     * Creates a new game.
+     * @param game
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<Game> createGame(@RequestBody Game game) {
+        Game created = gameService.saveOrUpdateGame(game);
+        return ResponseEntity.ok(created);
+    }
+
+    /**
+     * Updates an existing game.
+     *
+     * @param gameId the ID of the game to update
+     * @param game   the updated game data
+     * @return the updated game
+     */
+    @PutMapping("/{gameId}")
+    public ResponseEntity<Game> updateGame(@PathVariable Integer gameId, @RequestBody Game game) {
+        game.setId(gameId); // Ensure the ID matches the URL
+        Game updated = gameService.saveOrUpdateGame(game);
+        return ResponseEntity.ok(updated);
+    }
 }
