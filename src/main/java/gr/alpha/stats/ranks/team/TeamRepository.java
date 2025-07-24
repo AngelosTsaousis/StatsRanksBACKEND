@@ -1,12 +1,24 @@
 package gr.alpha.stats.ranks.team;
 
+import gr.alpha.stats.ranks.DTOObjects.PlayerAveragesDTO;
+import gr.alpha.stats.ranks.DTOObjects.TeamGameLogDTO;
 import gr.alpha.stats.ranks.DTOObjects.TopTeamsDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TeamRepository extends JpaRepository<Team, Integer> {
+
+    /**
+     * Find team by team id.
+     *
+     * @param id
+     * @return
+     */
+    Optional<Team> findById(Integer id);
+
     /**
      * Finds teams by their group ID.
      *
@@ -66,8 +78,154 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
     GROUP BY 
         t.id, t.name
     ORDER BY 
-        pointsConceded ASC
+        totalPoints ASC
     LIMIT 3
     """, nativeQuery = true)
     List<TopTeamsDTO> findTop3DefensiveTeamsByGroupId(Integer groupId);
+
+    @Query(value = """
+        SELECT  
+            t.name AS teamName, 
+            t.photo_url AS photoUrl,
+            SUM(
+                CASE 
+                    WHEN g.home_team_id = t.id AND g.home_team_points IS NOT NULL THEN g.home_team_points 
+                    ELSE 0 
+                END +
+                CASE 
+                    WHEN g.away_team_id = t.id AND g.away_team_points IS NOT NULL THEN g.away_team_points 
+                    ELSE 0 
+                END
+            ) AS totalPoints
+        FROM 
+            teams t
+        LEFT JOIN 
+            games g ON t.id = g.home_team_id OR t.id = g.away_team_id
+        WHERE 
+            CAST(t.group_id AS CHAR) LIKE CONCAT('%', :leagueId)
+        GROUP BY 
+            t.id, t.name
+        ORDER BY 
+            totalPoints DESC
+        LIMIT 3
+        """, nativeQuery = true)
+    List<TopTeamsDTO> findTop3ScoringLeagueTeams(Integer leagueId);
+
+    @Query(value = """
+        SELECT  
+            t.name AS teamName, 
+            t.photo_url AS photoUrl,
+            SUM(
+                CASE 
+                    WHEN g.home_team_id = t.id AND g.home_team_points IS NOT NULL THEN g.away_team_points 
+                    ELSE 0 
+                END +
+                CASE 
+                    WHEN g.away_team_id = t.id AND g.away_team_points IS NOT NULL THEN g.home_team_points 
+                    ELSE 0 
+                END
+            ) AS totalPoints
+        FROM 
+            teams t
+        LEFT JOIN 
+            games g ON t.id = g.home_team_id OR t.id = g.away_team_id
+        WHERE 
+            CAST(t.group_id AS CHAR) LIKE CONCAT('%', :leagueId)
+        GROUP BY 
+            t.id, t.name
+        ORDER BY 
+            totalPoints ASC
+        LIMIT 3
+        """, nativeQuery = true)
+    List<TopTeamsDTO> findTop3DefenciveLeagueTeams(Integer leagueId);
+
+    /**
+     * Finds the average points scored by a team based on its ID.
+     *
+     * @param teamId the ID of the team to find the average points for
+     * @return the average points scored by the team
+     */
+    @Query(value = """
+        SELECT 
+            AVG(
+                CASE 
+                    WHEN g.home_team_id = t.id THEN g.home_team_points 
+                    ELSE g.away_team_points 
+                END
+            ) AS averagePoints
+        FROM 
+            teams t
+        LEFT JOIN 
+            games g ON t.id = g.home_team_id OR t.id = g.away_team_id
+        WHERE 
+            t.id = :teamId
+        GROUP BY 
+            t.id
+        """, nativeQuery = true)
+    Double findTeamsAveragePointsByTeamId(Integer teamId);
+
+
+    /**
+     * Finds the average three-pointers made by a team based on its ID.
+     *
+     * @param teamId the ID of the team to find the average three-pointers for
+     * @return the average three-pointers made by the team
+     */
+    @Query(value = """
+        SELECT AVG(ps.three_pointers)
+            FROM player_stats ps
+            JOIN players p ON ps.player_id = p.id
+            WHERE p.team_id = :teamId
+            """, nativeQuery = true)
+    Double findAverageThreePointersByTeamId(Integer teamId);
+
+
+    /**
+     * Finds game logs for a team based on its ID, including opponent name, total points, and total three-pointers.
+     * @param teamId
+     * @return
+     */
+    @Query(value = """
+        SELECT
+            CASE
+                WHEN g.home_team_id = :teamId THEN t2.name
+                    ELSE t1.name
+                END AS opponent_team,
+                SUM(ps.points) AS total_points,
+                SUM(ps.three_pointers) AS total_threes
+            FROM player_stats ps
+            JOIN players p ON ps.player_id = p.id
+            JOIN games g ON ps.game_id = g.id
+            JOIN teams t1 ON g.home_team_id = t1.id
+            JOIN teams t2 ON g.away_team_id = t2.id
+            WHERE p.team_id = :teamId
+            GROUP BY opponent_team
+            """, nativeQuery = true)
+    List<TeamGameLogDTO> findGameLogsByTeamId(Integer teamId);
+
+
+    /**
+     * Finds player averages (points per game and three-pointers per game) for a specific team.
+     * @param teamId
+     * @return
+     */
+    @Query(value = """
+        SELECT
+            p.first_name,
+            p.last_name,
+            AVG(ps.points) AS ppg,
+            AVG(ps.three_pointers) AS tpg
+        FROM
+            players p
+        JOIN
+            player_stats ps ON ps.player_id = p.id
+        WHERE
+            p.team_id = :teamId
+        GROUP BY
+            p.id, p.first_name, p.last_name
+        ORDER BY
+            ppg DESC;
+            """, nativeQuery = true)
+    List<PlayerAveragesDTO> findPlayerAveragesByTeamId(Integer teamId);
+
 }

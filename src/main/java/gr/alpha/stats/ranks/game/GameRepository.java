@@ -4,6 +4,8 @@ import gr.alpha.stats.ranks.DTOObjects.TeamStandingDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface GameRepository extends JpaRepository<Game, Integer> {
 
     /**
@@ -63,5 +65,7 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
         """, nativeQuery = true)
     Iterable<TeamStandingDTO> findTeamStandingsByGroupId(Integer groupId);
 
+
+    List<Game> findByHomeTeamIdOrAwayTeamId(Integer homeTeamId, Integer awayTeamId);
 
 }

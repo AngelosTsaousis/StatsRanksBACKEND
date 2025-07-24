@@ -66,4 +66,24 @@ class GameService {
     public Iterable<TeamStandingDTO> getTeamStandingsByGroupId(Integer groupId) {
         return gameRepository.findTeamStandingsByGroupId(groupId);
     }
+
+    /**
+     * Saves or updates a game in the repository.
+     *
+     * @param game the game to save or update
+     * @return the saved or updated game
+     */
+    public Game saveOrUpdateGame(Game game) {
+        return gameRepository.save(game);
+    }
+
+    /**
+     * Retrieves all games for a specific team by its ID.
+     *
+     * @param teamId the ID of the team to find games for
+     * @return an iterable of games for the specified team
+     */
+    public Iterable<Game> getGamesByTeamId(Integer teamId) {
+        return gameRepository.findByHomeTeamIdOrAwayTeamId(teamId, teamId);
+    }
 }
