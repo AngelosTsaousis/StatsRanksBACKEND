@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/games")
+@RequestMapping("/api/games")
 class GameController {
     private final GameService gameService;
 

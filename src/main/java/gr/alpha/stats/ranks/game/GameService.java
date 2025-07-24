@@ -76,4 +76,14 @@ class GameService {
     public Game saveOrUpdateGame(Game game) {
         return gameRepository.save(game);
     }
+
+    /**
+     * Retrieves all games for a specific team by its ID.
+     *
+     * @param teamId the ID of the team to find games for
+     * @return an iterable of games for the specified team
+     */
+    public Iterable<Game> getGamesByTeamId(Integer teamId) {
+        return gameRepository.findByHomeTeamIdOrAwayTeamId(teamId, teamId);
+    }
 }

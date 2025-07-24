@@ -43,6 +43,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
             teams t ON p.team_id = t.id
         WHERE 
             t.group_id = :groupId
+            AND ps.points <> -1
         GROUP BY 
             p.id
         ORDER BY 
@@ -70,6 +71,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
             teams t ON p.team_id = t.id
         WHERE 
             t.group_id = :groupId
+            AND ps.three_pointers <> -1
         GROUP BY 
             p.id
         ORDER BY 
@@ -97,6 +99,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
             teams t ON p.team_id = t.id
         WHERE 
             CAST(t.group_id AS CHAR) LIKE CONCAT('%', :leagueId)
+            AND ps.points <> -1    
         GROUP BY 
             p.id
         ORDER BY 
@@ -124,6 +127,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
             teams t ON p.team_id = t.id
         WHERE 
             CAST(t.group_id AS CHAR) LIKE CONCAT('%', :leagueId)
+            AND ps.three_pointers <> -1
         GROUP BY 
             p.id
         ORDER BY 
@@ -141,7 +145,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
     @Query(value = """
         SELECT AVG(points)
         FROM player_stats
-        WHERE player_id = :playerId;
+        WHERE player_id = :playerId AND points <> -1;
         """, nativeQuery = true)
     Double findAveragePointsPerGame(Integer playerId);
 
@@ -154,7 +158,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
     @Query(value = """
         SELECT AVG(three_pointers)
         FROM player_stats
-        WHERE player_id = :playerId;
+        WHERE player_id = :playerId AND three_pointers <> -1;;
         """, nativeQuery = true)
     Double findAverageThreePointersPerGame(Integer playerId);
 
@@ -177,7 +181,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
         JOIN games g ON ps.game_id = g.id
         JOIN teams t_home ON g.home_team_id = t_home.id
         JOIN teams t_away ON g.away_team_id = t_away.id
-        WHERE ps.player_id = :playerId;                           
+        WHERE ps.player_id = :playerId AND ps.points <> -1;                           
         """, nativeQuery = true)
     Iterable<PlayerGameLogDTO> findAllGamesForPlayer(Integer playerId);
 }

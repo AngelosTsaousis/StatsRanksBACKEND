@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/teams")
+@RequestMapping("/api/teams")
 class TeamController {
 
     private final TeamService teamService;
@@ -128,7 +128,7 @@ class TeamController {
      * @param teamId
      * @return
      */
-    @GetMapping("/gameLogs/{teamId}")
+    @GetMapping("/api/gameLogs/{teamId}")
     public List<TeamGameLogDTO> getTeamGameLogs(@PathVariable Integer teamId) {
         return teamService.getTeamGameLogsByTeamId(teamId);
     }

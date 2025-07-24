@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/players")
+@RequestMapping("/api/players")
 class PlayerController {
 
     private final PlayerService playerService;

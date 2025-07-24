@@ -1,6 +1,9 @@
 package gr.alpha.stats.ranks.player;
 import gr.alpha.stats.ranks.DTOObjects.PlayerGameLogDTO;
 import gr.alpha.stats.ranks.DTOObjects.TopPlayerDTO;
+import gr.alpha.stats.ranks.game.Game;
+import gr.alpha.stats.ranks.game.GameRepository;
+import gr.alpha.stats.ranks.playerstats.PlayerStatsService;
 import gr.alpha.stats.ranks.team.TeamRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,10 +13,14 @@ public class PlayerService {
 
     private  final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
+    private final GameRepository gameRepository;
+    private final PlayerStatsService playerStatsService;
 
-    public PlayerService(PlayerRepository playerRepository, TeamRepository teamRepository) {
+    public PlayerService(PlayerRepository playerRepository, TeamRepository teamRepository, GameRepository gameRepository, PlayerStatsService playerStatsService) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
+        this.gameRepository = gameRepository;
+        this.playerStatsService = playerStatsService;
     }
 
     /**
@@ -122,6 +129,11 @@ public class PlayerService {
         if (player.getTeam() != null) {
             teamRepository.findById(player.getTeam().getId())
                     .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+
+            for(Game game : gameRepository.findByHomeTeamIdOrAwayTeamId(player.getTeam().getId(), player.getTeam().getId())) {
+                playerStatsService.createNewPlayerStats(player, game);
+            }
+
         }
         return playerRepository.save(player);
     }

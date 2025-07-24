@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/player-stats")
+@RequestMapping("/api/player-stats")
 public class PlayerStatsController {
 
     private final PlayerStatsService service;
@@ -16,9 +16,25 @@ public class PlayerStatsController {
         this.service = service;
     }
 
+    /**
+     * Retrieves all player stats.
+     *
+     * @return a list of all PlayerStats
+     */
     @GetMapping
     public List<PlayerStats> getAllPlayerStats() {
         return service.getAllStats();
+    }
+
+    /**
+     * Retrieves player stats by game ID.
+     *
+     * @param id the ID of the game to retrieve player stats for
+     * @return a list of PlayerStats associated with the specified game ID
+     */
+    @GetMapping("/game/{id}")
+    public List<PlayerStats> getPlayerStatsByGameId(@PathVariable Long id) {
+        return service.getPlayerStatsByGameId(id);
     }
 
     @PostMapping
