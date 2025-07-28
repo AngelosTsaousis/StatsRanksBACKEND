@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>gr.alpha</groupId>
-	<artifactId>stats.ranks</artifactId>
+	<artifactId>statsranks</artifactId>
 	<version>0.0.1</version>
 	<name>StatsRanks</name>
 	<description>Stats Ranks Project</description>
