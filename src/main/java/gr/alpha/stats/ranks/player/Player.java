@@ -51,6 +51,14 @@ public class Player {
         this.lastName = lastName;
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
     public Team getTeam() {
         return team;
     }
