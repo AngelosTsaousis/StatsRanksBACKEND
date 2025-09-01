@@ -101,8 +101,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
             teams t
         LEFT JOIN 
             games g ON t.id = g.home_team_id OR t.id = g.away_team_id
-        WHERE 
-            CAST(t.group_id AS CHAR) LIKE CONCAT('%', :leagueId)
+        WHERE (t.group_id % 10) = :leagueId            
         GROUP BY 
             t.id, t.name
         ORDER BY 
@@ -130,7 +129,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
         LEFT JOIN 
             games g ON t.id = g.home_team_id OR t.id = g.away_team_id
         WHERE 
-            CAST(t.group_id AS CHAR) LIKE CONCAT('%', :leagueId)
+            (t.group_id % 10) = :leagueId
         GROUP BY 
             t.id, t.name
         ORDER BY 

@@ -19,8 +19,6 @@ public class Team {
     @Column(name = "photo_url", length = 255)
     private String photoUrl;
 
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;

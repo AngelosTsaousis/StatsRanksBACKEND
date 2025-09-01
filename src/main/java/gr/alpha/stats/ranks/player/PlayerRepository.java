@@ -97,9 +97,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
             players p ON ps.player_id = p.id
         JOIN 
             teams t ON p.team_id = t.id
-        WHERE 
-            CAST(t.group_id AS CHAR) LIKE CONCAT('%', :leagueId)
-            AND ps.points <> -1    
+        WHERE (t.group_id % 10) = :leagueId AND ps.points <> -1    
         GROUP BY 
             p.id
         ORDER BY 
@@ -125,9 +123,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
             players p ON ps.player_id = p.id
         JOIN 
             teams t ON p.team_id = t.id
-        WHERE 
-            CAST(t.group_id AS CHAR) LIKE CONCAT('%', :leagueId)
-            AND ps.three_pointers <> -1
+        WHERE (t.group_id % 10) = :leagueId AND ps.three_pointers <> -1
         GROUP BY 
             p.id
         ORDER BY 
