@@ -1,4 +1,4 @@
-name: Deploy Angular + Spring Boot
+name: Deploy Spring Boot
 
 on:
   push:
@@ -12,6 +12,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      
+    - name: Add SSH key
+      run: |
+        echo "${{ secrets.SERVER_SSH_KEY }}" > ssh_key
+        chmod 600 ssh_key
+        eval "$(ssh-agent -s)"
+        ssh-add ssh_key
 
     - name: Deploy via SSH
       uses: appleboy/ssh-action@v0.1.7
