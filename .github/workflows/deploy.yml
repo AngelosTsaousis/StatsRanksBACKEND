@@ -29,6 +29,9 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add ssh_key
 
+      - name: Add server to known_hosts
+        run: ssh-keyscan -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
       - name: Remove previous JAR from server
         uses: appleboy/ssh-action@v1.2.2
         with:
