@@ -2,7 +2,6 @@ package gr.alpha.stats.ranks.playerstats;
 
 import gr.alpha.stats.ranks.game.Game;
 import gr.alpha.stats.ranks.player.Player;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -8,6 +8,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
+    env:
+      PROD_DB_URL: ${{ secrets.PROD_DB_URL }}
+      PROD_DB_USER: ${{ secrets.PROD_DB_USER }}
+      PROD_DB_PASS: ${{ secrets.PROD_DB_PASS }}
 
     steps:
       - name: Checkout code

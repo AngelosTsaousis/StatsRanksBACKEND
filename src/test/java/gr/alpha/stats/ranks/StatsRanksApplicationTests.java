@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class StatsRanksApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void contextLoads() { // Not implemented yet
 	}
 
 }
