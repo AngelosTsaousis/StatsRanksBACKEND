@@ -2,7 +2,6 @@ package gr.alpha.stats.ranks.game;
 
 import gr.alpha.stats.ranks.DTOObjects.TeamStandingDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
