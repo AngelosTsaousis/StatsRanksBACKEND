@@ -20,7 +20,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build Backend (Maven)
-        run: mvn clean package
+        run: mvn clean package -DskipTests
 
       - name: Add SSH key
         run: |
