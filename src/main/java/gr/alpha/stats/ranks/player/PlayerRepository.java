@@ -32,6 +32,8 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
      */
     @Query(value = """
         SELECT 
+            p.id AS id,
+            p.photo_url AS photoUrl,
             p.first_name AS firstName,
             p.last_name AS lastName,
             SUM(ps.points) AS total
@@ -60,6 +62,8 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
      */
     @Query(value = """
         SELECT 
+            p.id AS id,
+            p.photo_url AS photoUrl,
             p.first_name AS firstName,
             p.last_name AS lastName,
             SUM(ps.three_pointers) AS total
@@ -88,6 +92,8 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
      */
     @Query(value = """
         SELECT 
+            p.id AS id,
+            p.photo_url AS photoUrl,
             p.first_name AS firstName,
             p.last_name AS lastName,
             SUM(ps.points) AS total
@@ -114,6 +120,8 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
      */
     @Query(value = """
         SELECT 
+            p.id AS id,
+            p.photo_url AS photoUrl,
             p.first_name AS firstName,
             p.last_name AS lastName,
             SUM(ps.three_pointers) AS total
