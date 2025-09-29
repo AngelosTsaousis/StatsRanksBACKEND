@@ -35,6 +35,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
      */
     @Query(value = """
         SELECT  
+            t.id AS id,
             t.name AS teamName, 
             t.photo_url AS photoUrl,
             SUM(
@@ -63,6 +64,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
      */
     @Query(value = """
     SELECT 
+        t.id AS id,
         t.name AS teamName, 
         t.photo_url AS photoUrl, 
         SUM(
@@ -85,6 +87,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
 
     @Query(value = """
         SELECT  
+            t.id AS id,
             t.name AS teamName, 
             t.photo_url AS photoUrl,
             SUM(
@@ -112,6 +115,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
 
     @Query(value = """
         SELECT  
+            t.id AS id,
             t.name AS teamName, 
             t.photo_url AS photoUrl,
             SUM(
