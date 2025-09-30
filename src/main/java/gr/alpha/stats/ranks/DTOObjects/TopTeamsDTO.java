@@ -19,25 +19,21 @@ public class TopTeamsDTO {
     public void setId(Integer id) {
         this.id = id;
     }
-
     public String getTeamName() {
         return teamName;
     }
     public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
-
     public String getPhotoUrl() {
         return photoUrl;
     }
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
-
     public Long getTotalPoints() {
         return totalPoints;
     }
-
     public void setTotalPoints(Long totalPoints) {
         this.totalPoints = totalPoints;
     }
