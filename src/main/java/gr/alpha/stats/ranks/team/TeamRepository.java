@@ -84,59 +84,48 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
     List<TopTeamsDTO> findTop3DefensiveTeamsByGroupId(Integer groupId);
 
     @Query(value = """
-        SELECT  
+
+            SELECT
             t.id AS id,
-            t.name AS teamName, 
+            t.name AS teamName,
             t.photo_url AS photoUrl,
             SUM(
-                CASE 
-                    WHEN g.home_team_id = t.id AND g.home_team_points IS NOT NULL THEN g.home_team_points 
-                    ELSE 0 
-                END +
-                CASE 
-                    WHEN g.away_team_id = t.id AND g.away_team_points IS NOT NULL THEN g.away_team_points 
-                    ELSE 0 
-                END
+                    CASE
+                        WHEN g.home_team_id = t.id THEN g.home_team_points
+                        WHEN g.away_team_id = t.id THEN g.away_team_points
+                        END
             ) AS totalPoints
-        FROM 
-            teams t
-        LEFT JOIN 
-            games g ON t.id = g.home_team_id OR t.id = g.away_team_id
-        WHERE (t.group_id % 10) = :leagueId            
-        GROUP BY 
-            t.id, t.name
-        ORDER BY 
-            totalPoints DESC
-        LIMIT 3
+        FROM teams t
+            JOIN games g ON t.id = g.home_team_id OR t.id = g.away_team_id
+        WHERE ((t.group_id % 10) = :leagueId)
+          AND g.home_team_points IS NOT NULL
+          AND g.away_team_points IS NOT NULL
+        GROUP BY t.id, t.name
+        ORDER BY totalPoints DESC
+        LIMIT 3;
         """, nativeQuery = true)
     List<TopTeamsDTO> findTop3ScoringLeagueTeams(Integer leagueId);
 
     @Query(value = """
-        SELECT  
+
+            SELECT
             t.id AS id,
-            t.name AS teamName, 
+            t.name AS teamName,
             t.photo_url AS photoUrl,
             SUM(
-                CASE 
-                    WHEN g.home_team_id = t.id AND g.home_team_points IS NOT NULL THEN g.away_team_points 
-                    ELSE 0 
-                END +
-                CASE 
-                    WHEN g.away_team_id = t.id AND g.away_team_points IS NOT NULL THEN g.home_team_points 
-                    ELSE 0 
-                END
+                    CASE
+                        WHEN g.home_team_id = t.id THEN g.home_team_points
+                        WHEN g.away_team_id = t.id THEN g.away_team_points
+                        END
             ) AS totalPoints
-        FROM 
-            teams t
-        LEFT JOIN 
-            games g ON t.id = g.home_team_id OR t.id = g.away_team_id
-        WHERE 
-            (t.group_id % 10) = :leagueId
-        GROUP BY 
-            t.id, t.name
-        ORDER BY 
-            totalPoints ASC
-        LIMIT 3
+        FROM teams t
+            JOIN games g ON t.id = g.home_team_id OR t.id = g.away_team_id
+        WHERE ((t.group_id % 10) = :leagueId)
+          AND g.home_team_points IS NOT NULL
+          AND g.away_team_points IS NOT NULL
+        GROUP BY t.id, t.name
+        ORDER BY totalPoints ASC
+        LIMIT 3;
         """, nativeQuery = true)
     List<TopTeamsDTO> findTop3DefenciveLeagueTeams(Integer leagueId);
 
