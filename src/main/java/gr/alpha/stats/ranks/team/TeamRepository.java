@@ -179,6 +179,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
             FROM player_stats ps
             JOIN players p ON ps.player_id = p.id
             WHERE p.team_id = :teamId
+            AND ps.three_pointers <> -1;
             """, nativeQuery = true)
     Double findAverageThreePointersByTeamId(Integer teamId);
 
@@ -191,18 +192,25 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
     @Query(value = """
         SELECT
             CASE
-                WHEN g.home_team_id = :teamId THEN t2.name
-                    ELSE t1.name
+                WHEN g.home_team_id = :teamId THEN t.name
+                WHEN g.away_team_id = :teamId THEN tH.name
                 END AS opponent_team,
-                SUM(ps.points) AS total_points,
-                SUM(ps.three_pointers) AS total_threes
-            FROM player_stats ps
-            JOIN players p ON ps.player_id = p.id
-            JOIN games g ON ps.game_id = g.id
-            JOIN teams t1 ON g.home_team_id = t1.id
-            JOIN teams t2 ON g.away_team_id = t2.id
-            WHERE p.team_id = :teamId
-            GROUP BY opponent_team
+            CASE
+                WHEN g.home_team_id = :teamId THEN g.home_team_points
+                WHEN g.away_team_id = :teamId THEN g.away_team_points
+                END AS total_points,
+            SUM(ps.three_pointers) AS total_threes
+        FROM games g
+        JOIN teams t on g.away_team_id = t.id
+        JOIN teams tH on g.home_team_id = tH.id
+        JOIN player_stats ps on ps.game_id = g.id
+        JOIN players p on ps.player_id = p.id
+        WHERE (g.home_team_id = :teamId OR g.away_team_id = :teamId)
+        AND g.home_team_points IS NOT NULL
+        AND g.away_team_points IS NOT NULL
+        AND ps.three_pointers <> -1
+        AND p.team_id = :teamId
+        GROUP BY g.id, team_name;
             """, nativeQuery = true)
     List<TeamGameLogDTO> findGameLogsByTeamId(Integer teamId);
 
