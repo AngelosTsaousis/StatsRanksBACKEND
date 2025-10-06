@@ -128,7 +128,7 @@ class TeamController {
      * @param teamId
      * @return
      */
-    @GetMapping("/api/gameLogs/{teamId}")
+    @GetMapping("/gameLogs/{teamId}")
     public List<TeamGameLogDTO> getTeamGameLogs(@PathVariable Integer teamId) {
         return teamService.getTeamGameLogsByTeamId(teamId);
     }
