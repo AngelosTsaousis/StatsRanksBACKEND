@@ -210,7 +210,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
         AND g.away_team_points IS NOT NULL
         AND ps.three_pointers <> -1
         AND p.team_id = :teamId
-        GROUP BY g.id, team_name;
+        GROUP BY g.id, opponent_team;
             """, nativeQuery = true)
     List<TeamGameLogDTO> findGameLogsByTeamId(Integer teamId);
 
