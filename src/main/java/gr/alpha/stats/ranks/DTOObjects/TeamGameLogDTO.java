@@ -3,13 +3,13 @@ package gr.alpha.stats.ranks.DTOObjects;
 public class TeamGameLogDTO {
     private String opponentName;
     private Integer totalPoints;
-    private Integer totalThreePointers;
+    private Long totalThreePointers;
 
     // Default constructor (required by Jackson)
     public TeamGameLogDTO() {}
 
     // All-args constructor (used in @Query projection)
-    public TeamGameLogDTO(String opponentName, Integer totalPoints, Integer totalThreePointers) {
+    public TeamGameLogDTO(String opponentName, Integer totalPoints, Long totalThreePointers) {
         this.opponentName = opponentName;
         this.totalPoints = totalPoints;
         this.totalThreePointers = totalThreePointers;
@@ -24,7 +24,7 @@ public class TeamGameLogDTO {
         return totalPoints;
     }
 
-    public Integer getTotalThreePointers() {
+    public Long getTotalThreePointers() {
         return totalThreePointers;
     }
 
@@ -37,7 +37,7 @@ public class TeamGameLogDTO {
         this.totalPoints = totalPoints;
     }
 
-    public void setTotalThreePointers(Integer totalThreePointers) {
+    public void setTotalThreePointers(Long totalThreePointers) {
         this.totalThreePointers = totalThreePointers;
     }
 }
