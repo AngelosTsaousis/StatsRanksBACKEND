@@ -175,11 +175,21 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
      * @return the average three-pointers made by the team
      */
     @Query(value = """
-        SELECT AVG(ps.three_pointers)
-            FROM player_stats ps
-            JOIN players p ON ps.player_id = p.id
-            WHERE p.team_id = :teamId
-            AND ps.three_pointers <> -1;
+        SELECT AVG(total_threes) AS average_threes_per_game
+        FROM (SELECT
+                SUM(ps.three_pointers) AS total_threes
+                FROM games g
+                JOIN teams t on g.away_team_id = t.id
+                JOIN teams tH on g.home_team_id = tH.id
+                JOIN player_stats ps on ps.game_id = g.id
+                JOIN players p on ps.player_id = p.id
+                WHERE (g.home_team_id = :teamId OR g.away_team_id = :teamId)
+                AND g.home_team_points IS NOT NULL
+                AND g.away_team_points IS NOT NULL
+                AND ps.three_pointers <> -1
+                AND p.team_id = :teamId
+                GROUP BY g.id
+        ) AS sub;
             """, nativeQuery = true)
     Double findAverageThreePointersByTeamId(Integer teamId);
 
