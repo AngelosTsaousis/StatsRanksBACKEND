@@ -224,6 +224,7 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
             player_stats ps ON ps.player_id = p.id
         WHERE
             p.team_id = :teamId
+        AND ps.points <> -1 AND ps.three_pointers <> -1
         GROUP BY
             p.id, p.first_name, p.last_name
         ORDER BY
