@@ -23,45 +23,56 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
      * @return an iterable of team standings
      */
     @Query(value = """
-        SELECT
+
+            SELECT
             t.photo_url AS teamPhoto,
             t.name AS teamName,
-
+        
             COUNT(CASE
-                WHEN (g.home_team_id = t.id AND g.home_team_points > g.away_team_points)
-                  OR (g.away_team_id = t.id AND g.away_team_points > g.home_team_points)
-                THEN 1 END) AS wins,
-
+                      WHEN (g.home_team_id = t.id AND g.home_team_points > g.away_team_points)
+                          OR (g.away_team_id = t.id AND g.away_team_points > g.home_team_points)
+                          THEN 1 END) AS wins,
+        
             COUNT(CASE
-                WHEN (g.home_team_id = t.id AND g.home_team_points < g.away_team_points)
-                  OR (g.away_team_id = t.id AND g.away_team_points < g.home_team_points)
-                THEN 1 END) AS losses,
-
+                      WHEN (g.home_team_id = t.id AND g.home_team_points < g.away_team_points)
+                          OR (g.away_team_id = t.id AND g.away_team_points < g.home_team_points)
+                          THEN 1 END) AS losses,
+        
             COUNT(CASE
-                WHEN (g.home_team_id = t.id AND g.home_team_points > g.away_team_points)
-                  OR (g.away_team_id = t.id AND g.away_team_points > g.home_team_points)
-                THEN 1 END) * 2
-            +
+                      WHEN (g.home_team_id = t.id AND g.home_team_points > g.away_team_points)
+                          OR (g.away_team_id = t.id AND g.away_team_points > g.home_team_points)
+                          THEN 1 END) * 2
+                +
             COUNT(CASE
-                WHEN (g.home_team_id = t.id AND g.home_team_points < g.away_team_points)
-                  OR (g.away_team_id = t.id AND g.away_team_points < g.home_team_points)
-                THEN 1 END) AS points,
-
+                      WHEN (g.home_team_id = t.id AND g.home_team_points < g.away_team_points)
+                          OR (g.away_team_id = t.id AND g.away_team_points < g.home_team_points)
+                          THEN 1 END) AS points,
+        
             SUM(CASE
-                WHEN g.home_team_id = t.id THEN g.home_team_points
-                WHEN g.away_team_id = t.id THEN g.away_team_points
-                ELSE 0 END) AS pointsScored,
-
+                    WHEN g.home_team_id = t.id THEN g.home_team_points
+                    WHEN g.away_team_id = t.id THEN g.away_team_points
+                    ELSE 0 END) AS pointsScored,
+        
             SUM(CASE
-                WHEN g.home_team_id = t.id THEN g.away_team_points
-                WHEN g.away_team_id = t.id THEN g.home_team_points
-                ELSE 0 END) AS pointsReceived
-
+                    WHEN g.home_team_id = t.id THEN g.away_team_points
+                    WHEN g.away_team_id = t.id THEN g.home_team_points
+                    ELSE 0 END) AS pointsReceived,
+        
+            SUM(CASE
+                    WHEN g.home_team_id = t.id THEN g.home_team_points
+                    WHEN g.away_team_id = t.id THEN g.away_team_points
+                    ELSE 0 END)
+                -
+            SUM(CASE
+                    WHEN g.home_team_id = t.id THEN g.away_team_points
+                    WHEN g.away_team_id = t.id THEN g.home_team_points
+                    ELSE 0 END) AS pointsDifference
+        
         FROM teams t
-        LEFT JOIN games g ON t.id = g.home_team_id OR t.id = g.away_team_id
+                 LEFT JOIN games g ON t.id = g.home_team_id OR t.id = g.away_team_id
         WHERE t.group_id = :groupId
         GROUP BY t.id, t.name, t.photo_url
-        ORDER BY points DESC
+        ORDER BY points DESC, pointsDifference DESC;
         """, nativeQuery = true)
     Iterable<TeamStandingDTO> findTeamStandingsByGroupId(Integer groupId);
 

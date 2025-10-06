@@ -8,8 +8,9 @@ public class TeamStandingDTO {
     private Long points;
     private Long points_scored;
     private Long points_received;
+    private Long point_difference;
 
-    public TeamStandingDTO(String team_photo, String team_name, Long wins, Long losses, Long points, Long points_scored, Long points_received) {
+    public TeamStandingDTO(String team_photo, String team_name, Long wins, Long losses, Long points, Long points_scored, Long points_received, Long point_difference) {
         this.team_photo = team_photo;
         this.team_name = team_name;
         this.wins = wins;
@@ -17,6 +18,7 @@ public class TeamStandingDTO {
         this.points = points;
         this.points_scored = points_scored;
         this.points_received = points_received;
+        this.point_difference = point_difference;
     }
 
     public String getTeam_photo() {
@@ -62,4 +64,11 @@ public class TeamStandingDTO {
         this.points_received = points_received;
     }
 
+    public Long getPoint_difference() {
+        return point_difference;
+    }
+
+    public void setPoint_difference(Long point_difference) {
+        this.point_difference = point_difference;
+    }
 }
