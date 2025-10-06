@@ -68,8 +68,8 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
                t.photo_url AS photoUrl,
                SUM(
                 CASE
-                    WHEN g.home_team_id = t.id THEN g.home_team_points
-                    WHEN g.away_team_id = t.id THEN g.away_team_points
+                    WHEN g.home_team_id = t.id THEN g.away_team_points
+                    WHEN g.away_team_id = t.id THEN g.home_team_points
                 END
                  ) AS totalPoints
         FROM teams t
@@ -114,8 +114,8 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
             t.photo_url AS photoUrl,
             SUM(
                     CASE
-                        WHEN g.home_team_id = t.id THEN g.home_team_points
-                        WHEN g.away_team_id = t.id THEN g.away_team_points
+                        WHEN g.home_team_id = t.id THEN g.away_team_points
+                        WHEN g.away_team_id = t.id THEN g.home_team_points
                         END
             ) AS totalPoints
         FROM teams t
