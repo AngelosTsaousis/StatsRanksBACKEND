@@ -34,6 +34,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
         SELECT 
             p.id AS id,
             p.photo_url AS photoUrl,
+            t.photo_url AS teamPhotoUrl,
             p.first_name AS firstName,
             p.last_name AS lastName,
             SUM(ps.points) AS total
@@ -47,7 +48,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
             t.group_id = :groupId
             AND ps.points <> -1
         GROUP BY 
-            p.id
+            p.id, p.photo_url, t.photo_url, p.first_name, p.last_name
         ORDER BY 
             total DESC
         LIMIT 3
@@ -64,6 +65,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
         SELECT 
             p.id AS id,
             p.photo_url AS photoUrl,
+            t.photo_url AS teamPhotoUrl,
             p.first_name AS firstName,
             p.last_name AS lastName,
             SUM(ps.three_pointers) AS total
@@ -77,7 +79,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
             t.group_id = :groupId
             AND ps.three_pointers <> -1
         GROUP BY 
-            p.id
+            p.id, p.photo_url, t.photo_url, p.first_name, p.last_name
         ORDER BY 
             total DESC
         LIMIT 3
@@ -94,6 +96,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
         SELECT 
             p.id AS id,
             p.photo_url AS photoUrl,
+            t.photo_url AS teamPhotoUrl,
             p.first_name AS firstName,
             p.last_name AS lastName,
             SUM(ps.points) AS total
@@ -105,7 +108,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
             teams t ON p.team_id = t.id
         WHERE (t.group_id % 10) = :leagueId AND ps.points <> -1    
         GROUP BY 
-            p.id
+            p.id, p.photo_url, t.photo_url, p.first_name, p.last_name
         ORDER BY 
             total DESC
         LIMIT 3
@@ -122,6 +125,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
         SELECT 
             p.id AS id,
             p.photo_url AS photoUrl,
+            t.photo_url AS teamPhotoUrl,
             p.first_name AS firstName,
             p.last_name AS lastName,
             SUM(ps.three_pointers) AS total
@@ -133,7 +137,7 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
             teams t ON p.team_id = t.id
         WHERE (t.group_id % 10) = :leagueId AND ps.three_pointers <> -1
         GROUP BY 
-            p.id
+            p.id, p.photo_url, t.photo_url, p.first_name, p.last_name
         ORDER BY 
             total DESC
         LIMIT 3

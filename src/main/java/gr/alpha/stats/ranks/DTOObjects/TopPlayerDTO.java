@@ -3,6 +3,7 @@ package gr.alpha.stats.ranks.DTOObjects;
 public class TopPlayerDTO {
     private Integer id;
     private String photoUrl;
+    private String teamPhotoUrl;
     private String firstName;
     private String lastName;
     private Long total;
@@ -14,9 +15,10 @@ public class TopPlayerDTO {
      * @param lastName  the last name of the player
      * @param total the total points scored by the player
      */
-    public TopPlayerDTO(Integer id, String photoUrl, String firstName, String lastName, Long total) {
+    public TopPlayerDTO(Integer id, String photoUrl, String teamPhotoUrl, String firstName, String lastName, Long total) {
         this.id = id;
         this.photoUrl = photoUrl;
+        this.teamPhotoUrl = teamPhotoUrl;
         this.firstName = firstName;
         this.lastName = lastName;
         this.total = total;
@@ -25,7 +27,6 @@ public class TopPlayerDTO {
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -33,9 +34,15 @@ public class TopPlayerDTO {
     public String getPhotoUrl() {
         return photoUrl;
     }
-
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getTeamPhotoUrl() {
+        return teamPhotoUrl;
+    }
+    public void setTeamPhotoUrl(String teamPhotoUrl) {
+        this.teamPhotoUrl = teamPhotoUrl;
     }
 
     public String getFirstName() {
