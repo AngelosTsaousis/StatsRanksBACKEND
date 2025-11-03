@@ -189,7 +189,8 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
         JOIN games g ON ps.game_id = g.id
         JOIN teams t_home ON g.home_team_id = t_home.id
         JOIN teams t_away ON g.away_team_id = t_away.id
-        WHERE ps.player_id = :playerId AND ps.points <> -1;                           
+        WHERE ps.player_id = :playerId AND ps.points <> -1
+        ORDER BY g.game_date;                           
         """, nativeQuery = true)
     Iterable<PlayerGameLogDTO> findAllGamesForPlayer(Integer playerId);
 }
