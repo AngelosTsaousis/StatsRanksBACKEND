@@ -1,5 +1,6 @@
 package gr.alpha.stats.ranks.game;
 
+import gr.alpha.stats.ranks.DTOObjects.ScheduleDTO;
 import gr.alpha.stats.ranks.DTOObjects.TeamStandingDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -78,5 +79,28 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
 
     List<Game> findByHomeTeamIdOrAwayTeamId(Integer homeTeamId, Integer awayTeamId);
+
+    /**
+     * Finds the schedule of games for a specific group.
+     *
+     * @param groupId the ID of the group to find the schedule for
+     * @return a list of ScheduleDTO containing game details
+     */
+    @Query(value = """
+        SELECT 
+            g.game_date AS gameDate,
+            ht.photo_url as homeTeamPhoto,
+            ht.name AS homeTeamName,
+            g.home_team_points AS homeTeamPoints,
+            at.photo_url AS awayTeamPhoto,
+            at.name AS awayTeamName,
+            g.away_team_points AS awayTeamPoints
+        FROM games g
+        JOIN teams ht ON g.home_team_id = ht.id
+        JOIN teams at ON g.away_team_id = at.id
+        WHERE g.group_id = :groupId
+        ORDER BY game_date;
+        """, nativeQuery = true)
+    List<ScheduleDTO> findScheduleByGroupId(Integer groupId);
 
 }

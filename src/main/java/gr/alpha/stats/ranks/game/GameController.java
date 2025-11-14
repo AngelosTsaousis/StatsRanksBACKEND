@@ -1,11 +1,13 @@
 package gr.alpha.stats.ranks.game;
 
+import gr.alpha.stats.ranks.DTOObjects.GameMatchDTO;
 import gr.alpha.stats.ranks.DTOObjects.TeamStandingDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/games")
@@ -63,6 +65,12 @@ class GameController {
     public Iterable<TeamStandingDTO> getTeamStandingsByGroupId(@PathVariable Integer groupId) {
         return gameService.getTeamStandingsByGroupId(groupId);
     }
+
+    @GetMapping("/group/{groupId}/schedule")
+    public Map<LocalDate, List<GameMatchDTO>> getGroupedSchedule(@PathVariable Integer groupId) {
+        return gameService.getGroupedSchedule(groupId);
+    }
+
 
     /**
      * Creates a new game.

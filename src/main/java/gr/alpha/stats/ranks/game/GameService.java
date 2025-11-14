@@ -1,10 +1,13 @@
 package gr.alpha.stats.ranks.game;
 
+import gr.alpha.stats.ranks.DTOObjects.GameMatchDTO;
+import gr.alpha.stats.ranks.DTOObjects.ScheduleDTO;
 import gr.alpha.stats.ranks.DTOObjects.TeamStandingDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -85,5 +88,34 @@ class GameService {
      */
     public Iterable<Game> getGamesByTeamId(Integer teamId) {
         return gameRepository.findByHomeTeamIdOrAwayTeamId(teamId, teamId);
+    }
+
+    /**
+     * Retrieves the schedule for a specific group, grouped by game date.
+     *
+     * @param groupId the ID of the team to find the schedule for
+     * @return a map where the key is the game date and the value is a list of game matches on that date
+     */
+    public Map<LocalDate, List<GameMatchDTO>> getGroupedSchedule(Integer groupId) {
+        List<ScheduleDTO> flatList = gameRepository.findScheduleByGroupId(groupId);
+
+        return flatList.stream()
+                .collect(Collectors.groupingBy(
+                        ScheduleDTO::getGameDate, // This is the key for the map (e.g., "2025-10-05")
+
+                        // This part creates the inner list for each date
+                        Collectors.mapping(
+                                // Transform the full GameData object into a simpler GameMatch object
+                                gameData -> new GameMatchDTO(
+                                        gameData.getHomeTeamPhoto(),
+                                        gameData.getHomeTeamName(),
+                                        gameData.getHomeTeamPoints(),
+                                        gameData.getAwayTeamPhoto(),
+                                        gameData.getAwayTeamName(),
+                                        gameData.getAwayTeamPoints()
+                                ),
+                                Collectors.toList() // Collect the GameMatch objects into a List
+                        )
+                ));
     }
 }
